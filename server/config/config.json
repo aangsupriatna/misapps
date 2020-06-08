@@ -1,7 +1,11 @@
 {
   "development": {
-    "dialect": "sqlite",
-    "storage": "./server/database/db.development.sqlite"
+    "username": "root",
+    "password": "1234",
+    "database": "misapps",
+    "host": "localhost",
+    "dialect": "mysql",
+    "operatorsAliases": false
   },
   "test": {
     "dialect": "sqlite",
@@ -9,8 +13,8 @@
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
+    "password": "1234",
+    "database": "misapps",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false
