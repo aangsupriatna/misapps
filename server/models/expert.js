@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Expert.associate = function (models) {
     // associations can be defined here
-    models.Expert.hasMany(models.Project);
+    models.Expert.belongsToMany(models.Project, { through: 'ExpertsProjects', foreignKey: 'expertId', as: 'projects' });
     models.Expert.belongsToMany(models.Company, { through: 'ExpertsCompanies', foreignKey: 'expertId', as: 'companies' })
 
     // models.Expert.belongsToMany(models.Company, {

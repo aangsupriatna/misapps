@@ -10,6 +10,26 @@ app.get('/expert', (req, res) => {
 });
 
 app.post('/expert/create', function (req, res) {
+  models.Expert.create(
+    {
+      name: req.body.name,
+      address: req.body.address
+    })
+    .then((newExperts) => {
+      models.Company.findOne({ where: { id: req.body.company_id }, include: ['experts'] })
+        .then((companies) => {
+          companies.addExperts(newExperts)
+            .then((joinedExpertsCompanies) => {
+              console.log(joinedExpertsCompanies)
+            })
+        })
+        .catch((err) => console.log("Error while Company search : ", err))
+    })
+    .catch((err) => console.log("Error while Experts creation : ", err))
+
+});
+
+app.post('/expert/creates', function (req, res) {
   models.Expert.bulkCreate([
     {
       name: 'Expert 1',

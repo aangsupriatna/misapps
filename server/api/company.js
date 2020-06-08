@@ -3,26 +3,16 @@ const app = require('express')()
 
 app.get('/company', (req, res) => {
   models.Company.findAll({
-    include: [models.Project, 'experts']
+    include: ['projects', 'experts']
   }).then(function (company) {
     res.send(company)
   });
 });
 
 app.post('/company/create', function (req, res) {
-  // models.Company.create({
-  //     name: req.body.name,
-  //     address: req.body.address
-  // }).then(function (company) {
-  //     res.send(company);
-  // });
-  models.Company.bulkCreate([
-    { name: 'PT. Miskat Alam Konsultan', address: 'Jakarta' },
-    { name: 'PT. Binadaya Inti Dinamika', address: 'Bandung' },
-    { name: 'PT. Miskat Alam Internasional', address: 'Papua' }
-  ])
+  models.Company.create({ name: req.body.name, address: req.body.address })
     .then((newCompany) => {
-      console.log(newCompany)
+      res.send(newCompany)
     })
     .catch((err) => {
       console.log("Error while company creation : ", err)
