@@ -2,39 +2,42 @@ var models = require('../models')
 const app = require('express')()
 
 app.get('/project', (req, res) => {
-    models.Project.findAll({
-        include: ['company', 'experts']
-    }).then(function (projects) {
-        res.send(projects)
-    });
+  models.Project.findAll({
+    include: ['company', 'experts']
+  }).then(function (projects) {
+    res.send(projects)
+  });
 });
 
 app.post('/project/create', function (req, res) {
-    // models.Project.create({
-    //     title: req.body.title,
-    //     location: req.body.location,
-    //     CompanyId: req.body.company_id,
-    //     ExpertId: req.body.expert_id,
-    // }).then(function (project) {
-    //     res.send(project);
-    // });
-  models.Project.create({ title: req.body.title, location: req.body.location, companyId: req.body.company_id})
-    .then((newProject) => {
-      res.send(newProject)
+  models.Project.create(
+    {
+      title: req.body.title,
+      location: req.body.location,
+      companyId: req.body.company_id
     })
-    .catch((err) => {
-      console.log("Error while projects creation : ", err)
+    .then((newProjects) => {
+      models.Expert.findOne({ where: { id: req.body.expert_id }, include: ['projects'] })
+        .then((expert) => {
+          expert.addProjects(newProjects)
+            .then((joinedExpertsProjects) => {
+              console.log(joinedExpertsProjects)
+            })
+        })
+        .catch((err) => console.log("Error while Expert search : ", err))
     })
+    .catch((err) => console.log("Error while Projects creation : ", err))
+
 });
 
 app.delete('/project', async function (req, res) {
-    await models.Project.destroy({
-        where: {
-            id: req.body.id
-        }
-    }).then(function () {
-        res.redirect('/');
-    });
+  await models.Project.destroy({
+    where: {
+      id: req.body.id
+    }
+  }).then(function () {
+    res.redirect('/');
+  });
 })
 
 module.exports = app

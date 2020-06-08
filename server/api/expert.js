@@ -3,7 +3,7 @@ const app = require('express')()
 
 app.get('/expert', (req, res) => {
   models.Expert.findAll({
-    include: [models.Project, 'companies']
+    include: ['projects', 'companies']
   }).then(function (expert) {
     res.send(expert)
   });
