@@ -12,11 +12,3 @@ app.use(project)
 app.use(company)
 app.use(expert)
 
-
-app.get('/hello', (req, res) => {
-    models.User.findAll({
-        include: []
-    }).then(function (users) {
-        res.send(users)
-    });
-});
