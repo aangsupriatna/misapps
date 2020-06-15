@@ -6,6 +6,8 @@ app.get('/expert', (req, res) => {
     include: ['projects', 'companies']
   }).then(function (expert) {
     res.send(expert)
+  }).catch(function (err) {
+    res.send(err.errors)
   });
 });
 
@@ -18,14 +20,16 @@ app.post('/expert/create', function (req, res) {
     .then((newExperts) => {
       models.Company.findOne({ where: { id: req.body.company_id }, include: ['experts'] })
         .then((companies) => {
-          companies.addExperts(newExperts)
+          companies.setExperts(newExperts)
             .then((joinedExpertsCompanies) => {
-              console.log(joinedExpertsCompanies)
+              res.send(joinedExpertsCompanies)
             })
-        })
-        .catch((err) => console.log("Error while Company search : ", err))
-    })
-    .catch((err) => console.log("Error while Experts creation : ", err))
+        }).catch(function (err) {
+          res.send(err.errors)
+        });
+    }).catch(function (err) {
+      res.send(err.errors)
+    });
 
 });
 
@@ -47,18 +51,20 @@ app.post('/expert/creates', function (req, res) {
     .then((newExperts) => {
       models.Company.findAll({ where: { id: [1, 2, 3] }, include: ['experts'] })
         .then((companies) => {
-          // For user 1, 2 and 3 set the sames workingDays
           companies.forEach(company => {
-            company.setExperts(newExperts) // workingDays is an array (one user hasMany workingDays)
+            company.setExperts(newExperts)
               .then((joinedExpertsCompanies) => {
                 console.log(joinedExpertsCompanies)
-              })
-              .catch((err) => console.log("Error while joining Experts and Companies : ", err))
+              }).catch(function (err) {
+                res.send(err.errors)
+              });
           });
-        })
-        .catch((err) => console.log("Error while Company search : ", err))
-    })
-    .catch((err) => console.log("Error while Experts creation : ", err))
+        }).catch(function (err) {
+          res.send(err.errors)
+        });
+    }).catch(function (err) {
+      res.send(err.errors)
+    });
 
 });
 

@@ -6,6 +6,8 @@ app.get('/project', (req, res) => {
     include: ['company', 'experts']
   }).then(function (projects) {
     res.send(projects)
+  }).catch(function (err) {
+    res.send(err.errors)
   });
 });
 
@@ -23,10 +25,12 @@ app.post('/project/create', function (req, res) {
             .then((joinedExpertsProjects) => {
               console.log(joinedExpertsProjects)
             })
-        })
-        .catch((err) => console.log("Error while Expert search : ", err))
-    })
-    .catch((err) => console.log("Error while Projects creation : ", err))
+        }).catch(function (err) {
+          res.send(err.errors)
+        });
+    }).catch(function (err) {
+      res.send(err.errors)
+    });
 
 });
 

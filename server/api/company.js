@@ -6,6 +6,8 @@ app.get('/company', (req, res) => {
     include: ['projects', 'experts']
   }).then(function (company) {
     res.send(company)
+  }).catch(function (err) {
+    res.send(err.errors)
   });
 });
 
@@ -13,10 +15,9 @@ app.post('/company/create', function (req, res) {
   models.Company.create({ name: req.body.name, address: req.body.address })
     .then((newCompany) => {
       res.send(newCompany)
-    })
-    .catch((err) => {
-      console.log("Error while company creation : ", err)
-    })
+    }).catch(function (err) {
+      res.send(err.errors)
+    });
 });
 
 app.delete('/company', async function (req, res) {

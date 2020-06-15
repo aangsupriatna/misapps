@@ -5,9 +5,14 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.STRING,
     userId: DataTypes.INTEGER,
   }, {});
-  UserProfile.associate = function(models) {
+  UserProfile.associate = function (models) {
     // associations can be defined here
-    models.UserProfile.belongsTo(models.User, {foreignKey: 'userId', as: 'user'})
+    // models.UserProfile.belongsTo(models.User, {
+    //   foreignKey: 'userId',
+    //   as: 'user',
+    //   onDelete: 'cascade'
+    // })
+    // models.UserProfile.belongsTo(models.User, {as: 'user', onDelete: 'CASCADE'})
   };
   return UserProfile;
 };
