@@ -64,12 +64,17 @@ app.put('/user/:userId', function (req, res, next) {
 
 // Delete
 app.delete('/user', async function (req, res) {
-    await models.User.destroy({
-        where: {
-            id: req.body.id
-        }
-    }).then(function (msg) {
-        res.sendStatus(msg);
+    models.User.findOne({ where: { id: req.body.id }, include: ['userProfile'] }).then(user => {
+        Promise.all([
+            user.destroy(),
+            user.userProfile.destroy()
+        ]).then(user => {
+            res.send(user)
+        }).catch(err => {
+            res.send(err.errors)
+        })
+    }).catch(err => {
+        res.send(err)
     });
 });
 
@@ -77,7 +82,7 @@ app.delete('/users', async function (req, res) {
     await models.User.destroy({
         where: {}
     }).then(function (msg) {
-        res.send(msg);
+        res.sendStatus(msg);
     });
 });
 
